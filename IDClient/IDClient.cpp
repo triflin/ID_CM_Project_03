@@ -31,8 +31,8 @@ int main() {
 		char ch;
 		cin >> ch;
 
-		int i = 5;
-		sock.Send(&i, ip, 49153);
+		std::string str = "Hello World!";
+		sock.Send(str, ip, 49153);
 	}
 	catch (SocketError const& e) {
 		wcout << e.GetErrorMessage() << endl;

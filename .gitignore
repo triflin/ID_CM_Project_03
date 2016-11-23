@@ -25,6 +25,10 @@ bld/
 [Oo]bj/
 [Ll]og/
 
+# Library build
+IDLib-dist/lib-x86
+IDLib-dist/lib-x86
+
 # Intellisense database file
 *.VC.db
 

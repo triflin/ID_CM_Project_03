@@ -28,10 +28,10 @@ int main() {
 		UDPSocket sock;
 		sock.Bind(49153, ip);
 
-		int i;
-		sock.Recieve(&i, ip, 8080);
+		std::string str;
+		sock.Recieve(str, ip, 8080);
 
-		cout << "Value of 'i' is " << i << endl;
+		cout << "Value of 'str' is " << str << endl;
 	}
 	catch (SocketError const& e) {
 		wcout << e.GetErrorMessage() << endl;

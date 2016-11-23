@@ -3,8 +3,6 @@
 
 namespace IDSocket
 {
-	unsigned short const UDPSocket::MAX_DATAGRAM_SIZE = 256;
-
 	UDPSocket::UDPSocket()
 	{
 		m_hSocket = socket(AF_INET, SOCK_DGRAM, 0);	// DATAGRAM => UDP/IP
