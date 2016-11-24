@@ -3,15 +3,11 @@
 
 namespace IDSocket
 {
-	UDPSocket::UDPSocket()
+	UDPSocket::UDPSocket(unsigned short port, std::string const& ipAddr)
 	{
+		// Create the socket handle
 		m_hSocket = socket(AF_INET, SOCK_DGRAM, 0);	// DATAGRAM => UDP/IP
-	}
 
-	UDPSocket::~UDPSocket() {}
-
-	void UDPSocket::Bind(unsigned short port, std::string const& ipAddr)
-	{
 		// Set up the server address
 		sockaddr_in serverAddress = { 0 };
 		serverAddress.sin_family = AF_INET;
@@ -25,4 +21,6 @@ namespace IDSocket
 			throw SocketError();
 		}
 	}
+
+	UDPSocket::~UDPSocket() {}
 }

@@ -3,8 +3,16 @@
 
 namespace IDSocket
 {
+	SocketError::SocketError() {}
+
+	SocketError::SocketError(std::wstring const& msg) : m_msg(msg) {}
+
 	std::wstring SocketError::GetErrorMessage() const
 	{
+		// If a custom error message was set. Return it.
+		if (!m_msg.empty())
+			return m_msg;
+
 		int err = WSAGetLastError();
 		
 		wchar_t* msg;

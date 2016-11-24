@@ -24,8 +24,7 @@ int main() {
 	cout << "This is my client..." << endl;
 	try {
 		std::string const ip = "127.0.0.1";
-		UDPSocket sock;
-		sock.Bind(8080, ip);
+		UDPSocket sock(8080, ip);
 
 		cout << "Press a key to send packet." << endl;
 		char ch;

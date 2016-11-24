@@ -146,9 +146,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="AbstractSocket.cpp" />
     <ClCompile Include="SocketError.cpp" />
     <ClCompile Include="TCPSocket.cpp" />

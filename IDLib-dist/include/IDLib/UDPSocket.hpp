@@ -10,7 +10,7 @@ namespace IDSocket
 	class UDPSocket : public AbstractSocket
 	{
 	public:
-		UDPSocket();
+		UDPSocket(unsigned short port, std::string const& ipAddr = "");
 		virtual ~UDPSocket();
 
 		template <typename T>
@@ -19,14 +19,12 @@ namespace IDSocket
 		template <typename T>
 		void Recieve(T& item, std::string const& ipAddr, unsigned short port);
 
-		void Bind(unsigned short port, std::string const& ipAddr = "");
-
 	private:
 		static unsigned short const MAX_DATAGRAM_SIZE = 65507;
 	};
 
 	// Template implementations
-#define TYPE_CHECK(T) static_assert(std::is_same<T, std::string>::value || std::is_pod<T>::value, "Value must be POD or std::string.")
+#define TYPE_CHECK(type) static_assert(std::is_same<type, std::string>::value || std::is_pod<type>::value, "Value must be POD or std::string.")
 
 	template <typename T>
 	void UDPSocket::Send(T& item, std::string const& ipAddr, unsigned short port)
