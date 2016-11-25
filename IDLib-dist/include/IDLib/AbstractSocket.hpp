@@ -16,8 +16,13 @@ namespace IDSocket
 		AbstractSocket();
 		virtual ~AbstractSocket();
 
-	protected:
+		sockaddr_in CreateSockAddr(unsigned short port, std::string const& ipAddr = "");
+
+	private:
 		WSADATA				m_wsaData;
+
+	protected:
+		static unsigned short const MAX_BUFFER_SIZE = 65507;
 		SOCKET				m_hSocket;
 	};
 }

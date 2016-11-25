@@ -2,13 +2,15 @@
 #define __TCPSOCKET_HPP__
 
 #include "AbstractSocket.hpp"
+#include <string>
+#include <type_traits>
 
 namespace IDSocket
 {
 	class TCPSocket : public AbstractSocket
 	{
 	public:
-		TCPSocket();
+		TCPSocket(std::string const& ipAddr, unsigned short port);
 		virtual ~TCPSocket();
 
 		template <typename T>
@@ -18,10 +20,12 @@ namespace IDSocket
 		void Recieve(T& item);
 	};
 
+	// Template implementations
+
 	template <typename T>
 	void TCPSocket::Send(T& item)
 	{
-
+		
 	}
 
 	template <typename T>

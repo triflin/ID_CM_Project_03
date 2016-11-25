@@ -22,4 +22,13 @@ namespace IDSocket
 			closesocket(m_hSocket);
 		WSACleanup();
 	}
+
+	sockaddr_in AbstractSocket::CreateSockAddr(unsigned short port, std::string const & ipAddr)
+	{
+		sockaddr_in addr = { 0 };
+		addr.sin_family = AF_INET;
+		addr.sin_port = htons(port);
+		addr.sin_addr.s_addr = (ipAddr == "") ? htonl(INADDR_ANY) : inet_addr(ipAddr.c_str());
+		return addr;
+	}
 }
