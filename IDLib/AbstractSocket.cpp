@@ -19,8 +19,14 @@ namespace IDSocket
 	AbstractSocket::~AbstractSocket()
 	{
 		if (m_hSocket != NULL)
-			closesocket(m_hSocket);
+			Close();
 		WSACleanup();
+	}
+
+	void AbstractSocket::Close()
+	{
+		closesocket(m_hSocket);
+		m_hSocket = NULL;
 	}
 
 	sockaddr_in AbstractSocket::CreateSockAddr(unsigned short port, std::string const & ipAddr)

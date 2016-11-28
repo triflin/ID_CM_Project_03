@@ -2,6 +2,7 @@
 #define __IDLIB_HPP__
 
 #include "UDPSocket.hpp"
+#include "TCPSocket.hpp"
 #include "SocketError.hpp"
 
 // Link against proper library

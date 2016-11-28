@@ -8,10 +8,27 @@
 
 namespace IDSocket
 {
-	UDPSocket::UDPSocket(unsigned short port, std::string const& ipAddr)
+	UDPSocket::UDPSocket() : m_isBound(false)
 	{
 		// Create the socket handle
 		m_hSocket = socket(AF_INET, SOCK_DGRAM, 0);	// DATAGRAM => UDP/IP
+	}
+
+	UDPSocket::UDPSocket(unsigned short port, std::string const& ipAddr) : m_isBound(false)
+	{
+		// Create the socket handle
+		m_hSocket = socket(AF_INET, SOCK_DGRAM, 0);	// DATAGRAM => UDP/IP
+		Bind(port, ipAddr);
+	}
+
+	UDPSocket::~UDPSocket() {}
+
+	void UDPSocket::Bind(unsigned short port, std::string const& ipAddr)
+	{
+		if (m_isBound)
+		{
+			throw SocketError(L"Socket already bound.");
+		}
 
 		// Set up the server address
 		sockaddr_in serverAddress = CreateSockAddr(port, ipAddr);
@@ -22,12 +39,23 @@ namespace IDSocket
 		{
 			throw SocketError();
 		}
+		else
+		{
+			m_isBound = true;
+		}
 	}
 
-	UDPSocket::~UDPSocket() {}
+	void UDPSocket::Close()
+	{
+		m_isBound = false;
+		Super::Close();
+	}
 
 	void UDPSocket::Send(std::string& item, std::string const & ipAddr, unsigned short port)
 	{
+		if (!m_isBound)
+			throw SocketError(L"Socket not bound.");
+
 		if (item.length() > static_cast<size_t>(std::numeric_limits<int>::max()))
 		{
 			std::wostringstream oss;
@@ -45,6 +73,9 @@ namespace IDSocket
 
 	void UDPSocket::Recieve(std::string& item, std::string const & ipAddr, unsigned short port)
 	{
+		if (!m_isBound)
+			throw SocketError(L"Socket not bound.");
+
 		// Create the address to recieve from
 		sockaddr_in recvFromAddr = CreateSockAddr(port, ipAddr);
 
