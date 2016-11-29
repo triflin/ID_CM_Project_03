@@ -24,17 +24,19 @@ int main() {
 	cout << "This is my client..." << endl;
 	try {
 		std::string const ip = "127.0.0.1";
-		UDPSocket sock(8080, ip);
+		//UDPSocket sock(8080, ip);
+		TCPSocket sock(ip, 8080);
+		//sock.Connect(ip, 8080);
 
 		cout << "Press a key to send packet." << endl;
 		char ch;
 		cin >> ch;
 
 		std::string str = "Hello World!";
-		sock.Send(str, ip, 49153);
+		sock.Send(str);
 	}
 	catch (SocketError const& e) {
-		wcout << e.what() << endl;
+		cout << e.what() << endl;
 	}
 	return 0;
 }

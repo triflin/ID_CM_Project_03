@@ -3,6 +3,7 @@
 
 #include "UDPSocket.hpp"
 #include "TCPSocket.hpp"
+#include "TCPListener.hpp"
 #include "SocketError.hpp"
 
 // Link against proper library

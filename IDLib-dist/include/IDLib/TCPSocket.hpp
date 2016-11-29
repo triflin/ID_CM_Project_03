@@ -10,9 +10,15 @@ namespace IDSocket
 	class TCPSocket : public AbstractSocket
 	{
 	public:
+		// Constructors
+		TCPSocket();
 		TCPSocket(std::string const& ipAddr, unsigned short port);
 		virtual ~TCPSocket();
 
+		// Accessors
+		bool IsConnected() const { return m_isConnected; }
+
+		// Send/Recieve methods
 		template <typename T>
 		void Send(T& item);
 
@@ -22,6 +28,17 @@ namespace IDSocket
 		void Recieve(T& item);
 
 		void Recieve(std::string& item);
+
+		// Connect/Disconnect
+		void Connect(std::string const& ipAddr, unsigned short port);
+		void Disconnect();
+
+	private:
+		bool	m_isConnected;
+
+	private:
+		TCPSocket(SOCKET handle);
+		friend class TCPListener;
 	};
 
 	// Template implementations
@@ -30,6 +47,12 @@ namespace IDSocket
 	void TCPSocket::Send(T& item)
 	{
 		static_assert(std::is_pod<T>::value, "Item must be a POD type.");
+
+		if (m_hSocket == NULL)
+			throw SocketError("Socket has been closed.");
+
+		if (!m_isConnected)
+			throw SocketError("Socket not connected.");
 
 		int res = send(m_hSocket, reinterpret_cast<const char*>(&item), sizeof(item), 0);
 		if (res == SOCKET_ERROR)
@@ -40,6 +63,12 @@ namespace IDSocket
 	void TCPSocket::Recieve(T& item)
 	{
 		static_assert(std::is_pod<T>::value, "Item must be a POD type.");
+
+		if (m_hSocket == NULL)
+			throw SocketError("Socket has been closed.");
+
+		if (!m_isConnected)
+			throw SocketError("Socket not connected.");
 
 		int res = recv(m_hSocket, reinterpret_cast<char*>(&item), sizeof(item), 0);
 		if (res == SOCKET_ERROR)

@@ -25,15 +25,24 @@ int main() {
 	cout << "This is my server..." << endl;
 	try {
 		std::string const ip = "127.0.0.1";
-		UDPSocket sock(49153);
+		//UDPSocket sock(49153);
 
-		std::string str;
-		sock.Recieve(str, ip, 8080);
+		//std::string str;
+		//sock.Recieve(str, ip, 8080);
+
+		TCPListener listener(ip, 8080);
+
+		//listener.Listen(ip, 8080);
+
+		TCPSocket sock = listener.Accept();
+
+		string str;
+		sock.Recieve(str);
 
 		cout << "Value of 'str' is " << str << endl;
 	}
 	catch (SocketError const& e) {
-		wcout << e.what() << endl;
+		cout << e.what() << endl;
 	}
 	return 0;
 }

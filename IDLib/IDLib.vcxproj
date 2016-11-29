@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClCompile Include="AbstractSocket.cpp" />
     <ClCompile Include="SocketError.cpp" />
+    <ClCompile Include="TCPListener.cpp" />
     <ClCompile Include="TCPSocket.cpp" />
     <ClCompile Include="UDPSocket.cpp" />
   </ItemGroup>
@@ -155,6 +156,7 @@
     <ClInclude Include="..\IDLib-dist\include\IDLib\AbstractSocket.hpp" />
     <ClInclude Include="..\IDLib-dist\include\IDLib\IDLib.hpp" />
     <ClInclude Include="..\IDLib-dist\include\IDLib\SocketError.hpp" />
+    <ClInclude Include="..\IDLib-dist\include\IDLib\TCPListener.hpp" />
     <ClInclude Include="..\IDLib-dist\include\IDLib\TCPSocket.hpp" />
     <ClInclude Include="..\IDLib-dist\include\IDLib\UDPSocket.hpp" />
   </ItemGroup>
