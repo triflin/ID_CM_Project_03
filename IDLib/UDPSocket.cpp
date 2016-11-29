@@ -8,13 +8,13 @@
 
 namespace IDSocket
 {
-	UDPSocket::UDPSocket()
+	UDPSocket::UDPSocket() : m_isBound(false)
 	{
 		// Create the socket handle
 		m_hSocket = socket(AF_INET, SOCK_DGRAM, 0);	// DATAGRAM => UDP/IP
 	}
 
-	UDPSocket::UDPSocket(unsigned short port, std::string const& ipAddr)
+	UDPSocket::UDPSocket(unsigned short port, std::string const& ipAddr) : m_isBound(false)
 	{
 		// Create the socket handle
 		m_hSocket = socket(AF_INET, SOCK_DGRAM, 0);	// DATAGRAM => UDP/IP
@@ -25,7 +25,10 @@ namespace IDSocket
 
 	void UDPSocket::Send(std::string& item, std::string const & ipAddr, unsigned short port)
 	{
-		if (!IsBound())
+		if (m_hSocket == NULL)
+			throw SocketError("Socket has been closed.");
+
+		if (!m_isBound)
 			throw SocketError("Socket not bound.");
 
 		if (item.length() > static_cast<size_t>(std::numeric_limits<int>::max()))
@@ -45,7 +48,10 @@ namespace IDSocket
 
 	void UDPSocket::Recieve(std::string& item, std::string const & ipAddr, unsigned short port)
 	{
-		if (!IsBound())
+		if (m_hSocket == NULL)
+			throw SocketError("Socket has been closed.");
+
+		if (!m_isBound)
 			throw SocketError("Socket not bound.");
 
 		// Create the address to recieve from
@@ -61,5 +67,37 @@ namespace IDSocket
 		// Set the null terminator
 		buffer[min(res, MAX_BUFFER_SIZE - 1)] = NULL;
 		item = buffer;
+	}
+
+	void UDPSocket::Bind(unsigned short port, std::string const& ipAddr)
+	{
+		if (m_hSocket == NULL)
+			throw SocketError("Socket has been closed.");
+
+		if (m_isBound)
+			throw SocketError("Socket already bound.");
+
+		// Set up the server address
+		sockaddr_in serverAddress = CreateSockAddr(port, ipAddr);
+
+		// Bind to the server address
+		int res = bind(m_hSocket, reinterpret_cast<sockaddr*>(&serverAddress), sizeof(sockaddr_in));
+		if (res == SOCKET_ERROR)
+		{
+			throw SocketError("Error binding the socket.");
+		}
+		else
+		{
+			m_isBound = true;
+		}
+	}
+
+	void UDPSocket::Close()
+	{
+		if (m_hSocket == NULL)
+			throw SocketError("Socket already closed.");
+		m_isBound = false;
+		closesocket(m_hSocket);
+		m_hSocket = NULL;
 	}
 }
