@@ -14,12 +14,6 @@ namespace IDSocket
 		UDPSocket(unsigned short port, std::string const& ipAddr = "");
 		virtual ~UDPSocket();
 
-		// Accessors
-		bool IsBound() const { return m_isBound; }
-
-		void Bind(unsigned short port, std::string const& ipAddr = "");
-		virtual void Close() override;
-
 		template <typename T>
 		void Send(T& item, std::string const& ipAddr, unsigned short port);
 
@@ -29,9 +23,6 @@ namespace IDSocket
 		void Recieve(T& item, std::string const& ipAddr, unsigned short port);
 
 		void Recieve(std::string& item, std::string const& ipAddr, unsigned short port);
-
-	private:
-		bool m_isBound;
 	};
 
 	// Template implementations
@@ -41,8 +32,8 @@ namespace IDSocket
 	{
 		static_assert(std::is_pod<T>::value, "Item must be a POD type.");
 
-		if (!m_isBound)
-			throw SocketError(L"Socket not bound.");
+		if (!IsBound())
+			throw SocketError("Socket not bound.");
 
 		// Create the address to send to
 		sockaddr_in sendToAddr = CreateSockAddr(port, ipAddr);
@@ -50,7 +41,7 @@ namespace IDSocket
 		// Send the item
 		int res = sendto(m_hSocket, reinterpret_cast<const char*>(&item), sizeof(item), 0, reinterpret_cast<sockaddr*>(&sendToAddr), sizeof(sendToAddr));
 		if (res == SOCKET_ERROR)
-			throw SocketError();
+			throw SocketError("Error sending data.");
 	}
 
 	template <typename T>
@@ -58,8 +49,8 @@ namespace IDSocket
 	{
 		static_assert(std::is_pod<T>::value, "Item must be a POD type.");
 
-		if (!m_isBound)
-			throw SocketError(L"Socket not bound.");
+		if (!IsBound())
+			throw SocketError("Socket not bound.");
 
 		// Create the address to revive from
 		sockaddr_in recvFromAddr = CreateSockAddr(port, ipAddr);
@@ -69,7 +60,7 @@ namespace IDSocket
 		// Recieve the item
 		int res = recvfrom(m_hSocket, reinterpret_cast<char*>(&item), sizeof(item), 0, reinterpret_cast<sockaddr*>(&recvFromAddr), &cbRecvFromAddr);
 		if (res == SOCKET_ERROR)
-			throw SocketError();
+			throw SocketError("Error recieving data.");
 	}
 }
 

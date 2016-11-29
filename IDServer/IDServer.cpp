@@ -33,7 +33,7 @@ int main() {
 		cout << "Value of 'str' is " << str << endl;
 	}
 	catch (SocketError const& e) {
-		wcout << e.GetErrorMessage() << endl;
+		wcout << e.what() << endl;
 	}
 	return 0;
 }

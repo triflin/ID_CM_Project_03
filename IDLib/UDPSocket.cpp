@@ -8,13 +8,13 @@
 
 namespace IDSocket
 {
-	UDPSocket::UDPSocket() : m_isBound(false)
+	UDPSocket::UDPSocket()
 	{
 		// Create the socket handle
 		m_hSocket = socket(AF_INET, SOCK_DGRAM, 0);	// DATAGRAM => UDP/IP
 	}
 
-	UDPSocket::UDPSocket(unsigned short port, std::string const& ipAddr) : m_isBound(false)
+	UDPSocket::UDPSocket(unsigned short port, std::string const& ipAddr)
 	{
 		// Create the socket handle
 		m_hSocket = socket(AF_INET, SOCK_DGRAM, 0);	// DATAGRAM => UDP/IP
@@ -23,42 +23,14 @@ namespace IDSocket
 
 	UDPSocket::~UDPSocket() {}
 
-	void UDPSocket::Bind(unsigned short port, std::string const& ipAddr)
-	{
-		if (m_isBound)
-		{
-			throw SocketError(L"Socket already bound.");
-		}
-
-		// Set up the server address
-		sockaddr_in serverAddress = CreateSockAddr(port, ipAddr);
-
-		// Bind to the server address
-		int res = bind(m_hSocket, reinterpret_cast<sockaddr*>(&serverAddress), sizeof(sockaddr_in));
-		if (res == SOCKET_ERROR)
-		{
-			throw SocketError();
-		}
-		else
-		{
-			m_isBound = true;
-		}
-	}
-
-	void UDPSocket::Close()
-	{
-		m_isBound = false;
-		Super::Close();
-	}
-
 	void UDPSocket::Send(std::string& item, std::string const & ipAddr, unsigned short port)
 	{
-		if (!m_isBound)
-			throw SocketError(L"Socket not bound.");
+		if (!IsBound())
+			throw SocketError("Socket not bound.");
 
 		if (item.length() > static_cast<size_t>(std::numeric_limits<int>::max()))
 		{
-			std::wostringstream oss;
+			std::ostringstream oss;
 			oss << "String must have a maximum length of " << std::numeric_limits<int>::max() << "\n";
 			throw SocketError(oss.str());
 		}
@@ -68,13 +40,13 @@ namespace IDSocket
 
 		int res = sendto(m_hSocket, item.c_str(), static_cast<int>(item.length()), 0, reinterpret_cast<sockaddr*>(&sendToAddr), sizeof(sendToAddr));
 		if (res == SOCKET_ERROR)
-			throw SocketError();
+			throw SocketError("Error sending data.");
 	}
 
 	void UDPSocket::Recieve(std::string& item, std::string const & ipAddr, unsigned short port)
 	{
-		if (!m_isBound)
-			throw SocketError(L"Socket not bound.");
+		if (!IsBound())
+			throw SocketError("Socket not bound.");
 
 		// Create the address to recieve from
 		sockaddr_in recvFromAddr = CreateSockAddr(port, ipAddr);
@@ -84,7 +56,7 @@ namespace IDSocket
 		char buffer[MAX_BUFFER_SIZE];
 		int res = recvfrom(m_hSocket, buffer, MAX_BUFFER_SIZE, 0, reinterpret_cast<sockaddr*>(&recvFromAddr), &cbRecvFromAddr);
 		if (res == SOCKET_ERROR)
-			throw SocketError();
+			throw SocketError("Error recieving data");
 
 		// Set the null terminator
 		buffer[min(res, MAX_BUFFER_SIZE - 1)] = NULL;

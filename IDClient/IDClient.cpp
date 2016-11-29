@@ -34,7 +34,7 @@ int main() {
 		sock.Send(str, ip, 49153);
 	}
 	catch (SocketError const& e) {
-		wcout << e.GetErrorMessage() << endl;
+		wcout << e.what() << endl;
 	}
 	return 0;
 }

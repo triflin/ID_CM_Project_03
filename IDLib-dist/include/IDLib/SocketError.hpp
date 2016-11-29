@@ -5,15 +5,15 @@
 
 namespace IDSocket
 {
-	class SocketError
+	class SocketError : std::exception
 	{
 	public:
 		SocketError();
-		SocketError(std::wstring const& msg);
-		std::wstring GetErrorMessage() const;
+		SocketError(std::string const& msg);
+		const char* what() const;
 
 	private:
-		std::wstring	m_msg;
+		std::string m_msg;
 	};
 }
 

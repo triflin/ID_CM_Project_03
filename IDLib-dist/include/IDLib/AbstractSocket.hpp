@@ -13,19 +13,20 @@ namespace IDSocket
 	class AbstractSocket
 	{
 	protected:
-		using Super = AbstractSocket;	// Subclasses can simply call Super::MethodName() to invoke the parent method
-
-	protected:
 		AbstractSocket();
 		virtual ~AbstractSocket();
+
+		bool IsBound() const { return m_isBound; }
 
 		sockaddr_in CreateSockAddr(unsigned short port, std::string const& ipAddr = "");
 
 	public:
-		virtual void Close();
+		void Bind(unsigned short port, std::string const& ipAddr = "");
+		void Close();
 
 	private:
 		WSADATA				m_wsaData;
+		bool				m_isBound;
 
 	protected:
 		static unsigned short const MAX_BUFFER_SIZE = 65507;
