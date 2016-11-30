@@ -11,22 +11,18 @@ namespace IDSocket
 	{
 		int startupResult = WSAStartup(MAKEWORD(2, 2), &m_wsaData);
 		if (startupResult != 0)
-			throw SocketError();
+			throw SocketError("Could not initialize WinSock.");
 
 		// Subclasses create the socket handle...
 	}
 
 	AbstractSocket::~AbstractSocket()
 	{
-		if (m_hSocket != NULL)
-		{
-			closesocket(m_hSocket);
-			m_hSocket = NULL;
-		}
+		// Subclasses are responsible for closing the socket handle...
 		WSACleanup();
 	}
 
-	sockaddr_in AbstractSocket::CreateSockAddr(unsigned short port, std::string const & ipAddr)
+	sockaddr_in AbstractSocket::CreateSockAddr(unsigned short port, std::string const& ipAddr)
 	{
 		sockaddr_in addr = { 0 };
 		addr.sin_family = AF_INET;

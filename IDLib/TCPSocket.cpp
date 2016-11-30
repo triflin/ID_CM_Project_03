@@ -15,12 +15,17 @@ namespace IDSocket
 		Connect(ipAddr, port);
 	}
 
-	TCPSocket::~TCPSocket() {}
+	TCPSocket::~TCPSocket()
+	{
+		if (m_hSocket != NULL)
+			Disconnect();
+	}
 
 	// Friend constructor
-	TCPSocket::TCPSocket(SOCKET handle) : m_isConnected(true)
+	TCPSocket::TCPSocket(SOCKET handle)
 	{
 		m_hSocket = handle;
+		m_isConnected = m_hSocket != NULL;
 	}
 
 	// Send/Recieve

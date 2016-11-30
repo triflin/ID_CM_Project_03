@@ -14,7 +14,11 @@ namespace IDSocket
 		Listen(ipAddr, port);
 	}
 
-	TCPListener::~TCPListener() {}
+	TCPListener::~TCPListener()
+	{
+		if (m_hSocket != NULL)
+			Close();
+	}
 
 	void TCPListener::Listen(std::string const& ipAddr, unsigned short port)
 	{
@@ -50,7 +54,11 @@ namespace IDSocket
 		// Get the connection
 		SOCKET s = SOCKET_ERROR;
 		while (s == SOCKET_ERROR)
+		{
 			s = accept(m_hSocket, NULL, NULL);
+			if (WSAGetLastError() == WSAENOTSOCK) // socket has been closed
+				break;
+		}
 
 		return TCPSocket(s);
 	}

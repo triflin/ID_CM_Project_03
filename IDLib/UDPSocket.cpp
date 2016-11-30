@@ -21,7 +21,11 @@ namespace IDSocket
 		Bind(port, ipAddr);
 	}
 
-	UDPSocket::~UDPSocket() {}
+	UDPSocket::~UDPSocket()
+	{
+		if (m_hSocket != NULL)
+			Close();
+	}
 
 	void UDPSocket::Send(std::string& item, std::string const & ipAddr, unsigned short port)
 	{

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 using namespace std;
 
 #include <IDLib\IDLib.hpp>
@@ -30,10 +31,9 @@ int main() {
 		//std::string str;
 		//sock.Recieve(str, ip, 8080);
 
-		TCPListener listener(ip, 8080);
+		TCPListener listener;
 
-		//listener.Listen(ip, 8080);
-
+		listener.Listen(ip, 8080);
 		TCPSocket sock = listener.Accept();
 
 		string str;

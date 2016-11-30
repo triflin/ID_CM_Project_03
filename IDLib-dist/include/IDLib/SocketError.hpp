@@ -10,10 +10,13 @@ namespace IDSocket
 	public:
 		SocketError();
 		SocketError(std::string const& msg);
-		const char* what() const;
+		const char* what() const override;
+
+		int GetErrorCode() const { return m_errno; }
 
 	private:
 		std::string m_msg;
+		int m_errno;
 	};
 }
 
