@@ -1,6 +1,11 @@
 #include "UDPSocket.hpp"
 #include "SocketError.hpp"
 
+#include <sstream>
+#include <numeric>
+
+#undef max
+
 namespace IDSocket
 {
 	UDPSocket::UDPSocket(unsigned short port, std::string const& ipAddr)
@@ -23,10 +28,17 @@ namespace IDSocket
 
 	void UDPSocket::Send(std::string& item, std::string const & ipAddr, unsigned short port)
 	{
+		if (item.length() > static_cast<size_t>(std::numeric_limits<int>::max()))
+		{
+			std::wostringstream oss;
+			oss << "String must have a maximum length of " << std::numeric_limits<int>::max() << "\n";
+			throw SocketError(oss.str());
+		}
+
 		// Create the address to send to
 		sockaddr_in sendToAddr = CreateSockAddr(port, ipAddr);
 
-		int res = sendto(m_hSocket, item.c_str(), item.length(), 0, reinterpret_cast<sockaddr*>(&sendToAddr), sizeof(sendToAddr));
+		int res = sendto(m_hSocket, item.c_str(), static_cast<int>(item.length()), 0, reinterpret_cast<sockaddr*>(&sendToAddr), sizeof(sendToAddr));
 		if (res == SOCKET_ERROR)
 			throw SocketError();
 	}
