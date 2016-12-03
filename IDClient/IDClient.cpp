@@ -10,7 +10,7 @@ using namespace IDSocket;
 #include <crtdbg.h>
 #endif
 
-int main() {
+int main(int argc, char* argv[]) {
 #if defined(_DEBUG)
 	int dbgFlags = ::_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
 	// bitwise or checks the block integrity on every memory call
@@ -21,19 +21,33 @@ int main() {
 	dbgFlags |= _CRTDBG_LEAK_CHECK_DF;
 	_CrtSetDbgFlag(dbgFlags);
 #endif // _DEBUG
-	cout << "This is my client..." << endl;
+
+	if (argc != 2)
+	{
+		cout << "Must specify the Server IP to connect to." << endl;
+		return 0;
+	}
+
+	string ip(argv[1]);
+
+	cout << "Enter your name: " << endl;
+	string msg;
+	getline(cin, msg);
+
 	try {
-		std::string const ip = "127.0.0.1";
-		//UDPSocket sock(8080, ip);
 		TCPSocket sock(ip, 8080);
-		//sock.Connect(ip, 8080);
+		sock.Send(msg);
 
-		cout << "Press a key to send packet." << endl;
-		char ch;
-		cin >> ch;
+		while (getline(cin, msg))
+		{
+			if (msg == "!q")
+				break;
 
-		std::string str = "Hello World!";
-		sock.Send(str);
+			sock.Send(msg);
+			sock.Recieve(msg);
+			cout << msg << endl;
+		}
+		
 	}
 	catch (SocketError const& e) {
 		cout << e.what() << endl;

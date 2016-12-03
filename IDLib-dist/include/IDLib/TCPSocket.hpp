@@ -55,8 +55,14 @@ namespace IDSocket
 			throw SocketError("Socket not connected.");
 
 		int res = send(m_hSocket, reinterpret_cast<const char*>(&item), sizeof(item), 0);
-		if (res == SOCKET_ERROR)
-			throw SocketError();
+		if (res == 0)
+		{
+			// Socket has been closed
+			m_isConnected = false;
+			m_hSocket = NULL;
+		}
+		else if (res == SOCKET_ERROR)
+			throw SocketError("Error sending data.");
 	}
 
 	template <typename T>
@@ -71,8 +77,14 @@ namespace IDSocket
 			throw SocketError("Socket not connected.");
 
 		int res = recv(m_hSocket, reinterpret_cast<char*>(&item), sizeof(item), 0);
-		if (res == SOCKET_ERROR)
-			throw SocketError();
+		if (res == 0)
+		{
+			// Socket has been closed
+			m_isConnected = false;
+			m_hSocket = NULL;
+		}
+		else if (res == SOCKET_ERROR)
+			throw SocketError("Error recieving data.");
 	}
 }
 
