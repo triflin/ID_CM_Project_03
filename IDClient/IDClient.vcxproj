@@ -150,7 +150,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="cFileView.cpp" />
+    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="cOptionBarView.cpp" />
+    <ClCompile Include="cStatusView.cpp" />
+    <ClCompile Include="FileInfo.cpp" />
+    <ClCompile Include="FileListModel.cpp" />
     <ClCompile Include="IDClient.cpp" />
+    <ClCompile Include="RegexSearch.cpp" />
+    <ClCompile Include="ThickWrapper.cpp" />
+    <ClCompile Include="ThinWrapper.cpp" />
+    <ClCompile Include="TUI_FileExplorerMain.cpp" />
+    <ClCompile Include="XError.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cFileView.h" />
+    <ClInclude Include="Controller.h" />
+    <ClInclude Include="cOptionBarView.h" />
+    <ClInclude Include="cStatusView.h" />
+    <ClInclude Include="FileInfo.h" />
+    <ClInclude Include="FileListModel.h" />
+    <ClInclude Include="IModel.h" />
+    <ClInclude Include="IView.h" />
+    <ClInclude Include="RegexSearch.h" />
+    <ClInclude Include="ThickWrapper.h" />
+    <ClInclude Include="ThinWrapper.h" />
+    <ClInclude Include="XError.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
