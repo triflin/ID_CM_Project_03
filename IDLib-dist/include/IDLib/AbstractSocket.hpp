@@ -12,10 +12,6 @@ namespace IDSocket
 {
 	class AbstractSocket
 	{
-	public:
-		// Accessors
-		bool IsOpen() const { return m_hSocket != NULL; }
-
 	protected:
 		AbstractSocket();
 		virtual ~AbstractSocket();

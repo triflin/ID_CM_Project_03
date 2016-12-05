@@ -1,4 +1,6 @@
 #include <iostream>
+#include <thread>
+#include <mutex>
 using namespace std;
 
 #include <IDLib\IDLib.hpp>
@@ -9,6 +11,31 @@ using namespace IDSocket;
 #include <Windows.h>
 #include <crtdbg.h>
 #endif
+
+mutex consoleMtx;
+bool done = false;
+
+void RecieveMessages(TCPSocket* sock)
+{
+	string msg;
+	while (sock->IsConnected())
+	{
+		try
+		{
+			sock->Recieve(msg);
+			{ lock_guard<mutex> lk(consoleMtx);
+			cout << msg << endl; }
+		}
+		catch (SocketError const& e)
+		{
+			if (e.GetErrorCode() != 0)
+			{
+				lock_guard<mutex> lk(consoleMtx);
+				cout << e.what() << endl;
+			}
+		}
+	}
+}
 
 int main(int argc, char* argv[]) {
 #if defined(_DEBUG)
@@ -28,15 +55,19 @@ int main(int argc, char* argv[]) {
 		return 0;
 	}
 
-	string ip(argv[1]);
+	string const ip(argv[1]);
 
 	cout << "Enter your name: " << endl;
 	string msg;
 	getline(cin, msg);
 
 	try {
+		// Connect and submit chatroom name
 		TCPSocket sock(ip, 8080);
 		sock.Send(msg);
+
+		// Start reciever thread
+		thread rThread(RecieveMessages, &sock);
 
 		while (getline(cin, msg))
 		{
@@ -44,10 +75,10 @@ int main(int argc, char* argv[]) {
 				break;
 
 			sock.Send(msg);
-			sock.Recieve(msg);
-			cout << msg << endl;
 		}
-		
+
+		sock.Disconnect();
+		rThread.join();
 	}
 	catch (SocketError const& e) {
 		cout << e.what() << endl;

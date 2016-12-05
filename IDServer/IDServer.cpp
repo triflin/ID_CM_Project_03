@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <thread>
+#include <mutex>
 using namespace std;
 
 // IDSocket headers
@@ -24,6 +25,7 @@ std::string const localhost = "127.0.0.1";
 TCPListener listener;
 map<string, shared_ptr<TCPSocket>> mClients;
 vector<thread> vThreads;
+mutex consoleMtx;
 bool isRunning = true;
 
 // Functions
@@ -66,7 +68,10 @@ void RelayInput(string name)
 				cout << e.what() << endl;
 		}
 	}
-	cout << name << " left.";
+
+	// Log that the user left the room
+	{ lock_guard<mutex> lk(consoleMtx);
+	cout << name << " left."; }
 }
 
 int main() {
@@ -95,12 +100,18 @@ int main() {
 	{
 		try
 		{
+			// Wait for a connection
 			shared_ptr<TCPSocket> client = listener.Accept();
+
+			// Get the user's chatroom handle
 			string name;
 			client->Recieve(name);
 
-			cout << name << " joined." << endl;
+			// Log it
+			{ lock_guard<mutex> lk(consoleMtx);
+			cout << name << " joined." << endl; }
 
+			// Store the user's handle and associate a socket to communicate to them with
 			mClients.insert(pair<string, shared_ptr<TCPSocket>>(name, client));
 			vThreads.push_back(thread(RelayInput, name));
 		}
