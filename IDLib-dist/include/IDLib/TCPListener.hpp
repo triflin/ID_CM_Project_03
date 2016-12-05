@@ -3,6 +3,8 @@
 
 #include "TCPSocket.hpp"
 
+#include <memory>
+
 namespace IDSocket
 {
 	class TCPListener : public AbstractSocket
@@ -16,7 +18,7 @@ namespace IDSocket
 		bool IsListening() const { return m_isListening; }
 
 		void Listen(std::string const& ipAddr, unsigned short port);
-		TCPSocket Accept();
+		std::shared_ptr<TCPSocket> Accept();
 		void Close();
 
 	private:

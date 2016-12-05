@@ -38,8 +38,14 @@ namespace IDSocket
 			throw SocketError("Socket not connected.");
 
 		int res = send(m_hSocket, item.c_str(), static_cast<int>(item.length()), 0);
-		if (res == SOCKET_ERROR)
-			throw SocketError();
+		if (res == 0)
+		{
+			// Socket has been closed
+			m_isConnected = false;
+			m_hSocket = NULL;
+		}
+		else if (res == SOCKET_ERROR)
+			throw SocketError("Error sending data.");
 	}
 
 	void TCPSocket::Recieve(std::string& item)
@@ -52,11 +58,23 @@ namespace IDSocket
 
 		char buffer[MAX_BUFFER_SIZE];
 		int res = recv(m_hSocket, buffer, MAX_BUFFER_SIZE, 0);
-		if (res == SOCKET_ERROR)
-			throw SocketError();
-		
-		buffer[min(res, MAX_BUFFER_SIZE - 1)] = NULL;
-		item = buffer;
+		if (res == 0)
+		{
+			// Socket has been closed
+			m_isConnected = false;
+			m_hSocket = NULL;
+		}
+		else if (res == SOCKET_ERROR)
+		{
+			// There was an error
+			throw SocketError("Error recieving data.");
+		}
+		else
+		{
+			// Success
+			buffer[min(res, MAX_BUFFER_SIZE - 1)] = NULL;
+			item = buffer;
+		}
 	}
 
 	// Connect/Disconnect

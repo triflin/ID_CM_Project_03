@@ -43,7 +43,7 @@ namespace IDSocket
 		m_isListening = true;
 	}
 
-	TCPSocket TCPListener::Accept()
+	std::shared_ptr<TCPSocket> TCPListener::Accept()
 	{
 		if (m_hSocket == NULL)
 			throw SocketError("Socket has been closed.");
@@ -60,7 +60,7 @@ namespace IDSocket
 				break;
 		}
 
-		return TCPSocket(s);
+		return std::shared_ptr<TCPSocket>(new TCPSocket(s));
 	}
 
 	void TCPListener::Close()
