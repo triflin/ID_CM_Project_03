@@ -7,7 +7,7 @@
 
 namespace IDSocket
 {
-	class TCPSocket : public AbstractSocket
+	class TCPSocket final : private AbstractSocket
 	{
 	public:
 		// Constructors
@@ -55,7 +55,7 @@ namespace IDSocket
 			throw SocketError("Socket not connected.");
 
 		int res = send(m_hSocket, reinterpret_cast<const char*>(&item), sizeof(item), 0);
-		if (res == 0)
+		if (res == 0 || WSAGetLastError() == WSAENOTSOCK)
 		{
 			// Socket has been closed
 			m_isConnected = false;
@@ -77,7 +77,7 @@ namespace IDSocket
 			throw SocketError("Socket not connected.");
 
 		int res = recv(m_hSocket, reinterpret_cast<char*>(&item), sizeof(item), 0);
-		if (res == 0)
+		if (res == 0 || WSAGetLastError() == WSAENOTSOCK)
 		{
 			// Socket has been closed
 			m_isConnected = false;
