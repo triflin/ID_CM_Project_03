@@ -5,7 +5,7 @@
 
 namespace IDSocket
 {
-	class SocketError : std::exception
+	class SocketError : public std::exception
 	{
 	public:
 		SocketError();

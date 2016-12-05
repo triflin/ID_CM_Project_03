@@ -2,14 +2,14 @@
 #define __TCPLISTENER_HPP__
 
 #include "TCPSocket.hpp"
-
 #include <memory>
 
 namespace IDSocket
 {
-	class TCPListener : public AbstractSocket
+	class TCPListener final : private AbstractSocket
 	{
 	public:
+		// Constructors
 		TCPListener();
 		TCPListener(std::string const& ipAddr, unsigned short port);
 		virtual ~TCPListener();

@@ -7,7 +7,7 @@
 
 namespace IDSocket
 {
-	class UDPSocket : public AbstractSocket
+	class UDPSocket final : private AbstractSocket
 	{
 	public:
 		// Constructors

@@ -38,7 +38,7 @@ namespace IDSocket
 			throw SocketError("Socket not connected.");
 
 		int res = send(m_hSocket, item.c_str(), static_cast<int>(item.length()), 0);
-		if (res == 0)
+		if (res == 0 || WSAGetLastError() == WSAENOTSOCK)
 		{
 			// Socket has been closed
 			m_isConnected = false;
@@ -58,7 +58,7 @@ namespace IDSocket
 
 		char buffer[MAX_BUFFER_SIZE];
 		int res = recv(m_hSocket, buffer, MAX_BUFFER_SIZE, 0);
-		if (res == 0)
+		if (res == 0 || WSAGetLastError() == WSAENOTSOCK)
 		{
 			// Socket has been closed
 			m_isConnected = false;
