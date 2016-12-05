@@ -16,7 +16,7 @@ namespace IDSocket
 		AbstractSocket();
 		virtual ~AbstractSocket();
 
-		sockaddr_in CreateSockAddr(unsigned short port, std::string const& ipAddr = "");
+		static sockaddr_in CreateSockAddr(unsigned short port, std::string const& ipAddr = "");
 
 	private:
 		WSADATA				m_wsaData;
