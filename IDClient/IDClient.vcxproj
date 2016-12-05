@@ -156,7 +156,6 @@
     <ClCompile Include="cStatusView.cpp" />
     <ClCompile Include="FileInfo.cpp" />
     <ClCompile Include="FileListModel.cpp" />
-    <ClCompile Include="IDClient.cpp" />
     <ClCompile Include="RegexSearch.cpp" />
     <ClCompile Include="ThickWrapper.cpp" />
     <ClCompile Include="ThinWrapper.cpp" />

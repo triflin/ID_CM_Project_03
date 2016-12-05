@@ -20,7 +20,7 @@ eDirection dir;
 
 cStatusView::cStatusView(ThickWrapper& _thick, FileListModel& fl):fileList(fl), thick(_thick)
 {
-	srand(time(NULL));
+	srand((unsigned)time(NULL));
 	Setup();
 	while (!gameOver) {
 		Draw();

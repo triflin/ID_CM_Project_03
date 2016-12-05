@@ -7,7 +7,7 @@ class ThickWrapper
 {
 private:
 	//SystemData
-	int currColor = 1;
+	unsigned int currColor = 1;
 	bool isStarted = false;
 	ThinWrapper					thin;
 
